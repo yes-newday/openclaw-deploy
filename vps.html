@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux 服务器部署 OpenClaw 教程 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .step { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .step-number { display: inline-block; background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 0.75rem; }
+        .warning { background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
+        th { background: var(--bg-secondary); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>Linux 服务器部署 OpenClaw</h1>
+        <p class="subtitle">在任意 VPS 上通过命令行部署 OpenClaw</p>
+
+        <h2>服务器推荐</h2>
+        <table>
+            <tr><th>提供商</th><th>价格</th><th>特点</th></tr>
+            <tr><td>DigitalOcean</td><td>$6/月起</td><td>简单易用，全球节点</td></tr>
+            <tr><td>Hetzner</td><td>€4/月起</td><td>性价比高，德国/芬兰</td></tr>
+            <tr><td>Vultr</td><td>$5/月起</td><td>全球节点，按小时计费</td></tr>
+            <tr><td>Hostinger</td><td>$4/月起</td><td>便宜，适合入门</td></tr>
+        </table>
+
+        <h2>系统要求</h2>
+        <ul>
+            <li>Ubuntu 20.04+ / Debian 11+ / CentOS 8+</li>
+            <li>Node.js 22+</li>
+            <li>2GB+ RAM（建议 4GB）</li>
+            <li>20GB+ 可用磁盘空间</li>
+        </ul>
+
+        <h2>部署步骤</h2>
+
+        <div class="step">
+            <h3><span class="step-number">1</span>SSH 登录服务器</h3>
+            <pre><code>ssh root@你的服务器IP</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>更新系统</h3>
+            <pre><code># Ubuntu/Debian
+apt update && apt upgrade -y
+
+# CentOS
+yum update -y</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span>安装 Node.js 22</h3>
+            <pre><code># 方法1: 使用 nodesource
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 方法2: 使用 nvm（推荐）
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install 22</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">4</span>安装 OpenClaw</h3>
+            <pre><code>curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+            <p>安装程序会自动：</p>
+            <ul>
+                <li>检测 Node.js 版本</li>
+                <li>下载最新 OpenClaw</li>
+                <li>创建配置目录</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">5</span>初始化配置</h3>
+            <pre><code>openclaw onboard</code></pre>
+            <p>按提示完成：</p>
+            <ul>
+                <li>输入 API Key</li>
+                <li>选择 AI 模型</li>
+                <li>配置聊天平台</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">6</span>配置防火墙</h3>
+            <pre><code># Ubuntu (ufw)
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw deny 18789/tcp
+sudo ufw enable
+
+# CentOS (firewalld)
+sudo firewall-cmd --permanent --add-port=22/tcp
+sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
+sudo firewall-cmd --permanent --add-port=18789/tcp --remove
+sudo firewall-cmd --reload</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">7</span>配置 Systemd 服务（可选）</h3>
+            <pre><code>sudo tee /etc/systemd/system/openclaw.service > /dev/null <<EOF
+[Unit]
+Description=OpenClaw AI Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/local/bin/openclaw start
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable openclaw
+sudo systemctl start openclaw</code></pre>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ 内存不足解决方案</strong>
+            <p>如果服务器内存小于 2GB，需要创建 Swap：</p>
+            <pre><code>sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab</code></pre>
+        </div>
+
+        <h2>常用命令</h2>
+        <pre><code># 启动
+openclaw start
+
+# 停止
+openclaw stop
+
+# 重启
+openclaw restart
+
+# 查看状态
+openclaw status
+
+# 查看日志
+openclaw logs -f
+
+# 更新
+openclaw update</code></pre>
+
+        <h2>配置 HTTPS（可选）</h2>
+        <p>使用 Caddy 自动配置 SSL：</p>
+        <pre><code># 安装 Caddy
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian-versioned.gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-versioned-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/debian any-version" | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+
+# 配置反向代理
+sudo cat > /etc/caddy/Caddyfile <<EOF
+:18789 {
+    reverse_proxy localhost:18789
+}
+EOF
+
+sudo systemctl reload caddy</code></pre>
+
+    </main>
+</body>
+</html>

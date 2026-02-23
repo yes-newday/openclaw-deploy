@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker 部署 OpenClaw 教程 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #f97316;
+            --bg: #0a0a0a;
+            --bg-secondary: #171717;
+            --text: #fafafa;
+            --text-secondary: #a3a3a3;
+            --border: #262626;
+            --code-bg: #0d0d0d;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .step { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .step-number { display: inline-block; background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 0.75rem; }
+        .tip { background: rgba(99, 102, 241, 0.1); border: 1px solid #6366f1; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav>
+                <a href="/">返回首页</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>Docker 部署 OpenClaw</h1>
+        <p class="subtitle">使用 Docker 容器化部署，环境隔离更安全</p>
+
+        <div class="tip">
+            <strong>💡 Docker 部署优势</strong>
+            <ul style="margin-top: 0.5rem;">
+                <li>环境隔离，不影响主机</li>
+                <li>升级简单，一行命令更新</li>
+                <li>可移植性强，任何平台都能运行</li>
+            </ul>
+        </div>
+
+        <h2>前置要求</h2>
+        <ul>
+            <li>Docker Engine 20.10+</li>
+            <li>Docker Compose v2+</li>
+            <li>2GB+ 可用内存</li>
+            <li>20GB+ 可用磁盘空间</li>
+        </ul>
+
+        <h2>部署步骤</h2>
+
+        <div class="step">
+            <h3><span class="step-number">1</span>安装 Docker</h3>
+            <p><strong>Ubuntu/Debian:</strong></p>
+            <pre><code>sudo apt update
+sudo apt install -y docker.io docker-compose-plugin
+sudo systemctl enable docker
+sudo systemctl start docker</code></pre>
+            <p><strong>CentOS/RHEL:</strong></p>
+            <pre><code>sudo yum install -y docker docker-compose
+sudo systemctl enable docker
+sudo systemctl start docker</code></pre>
+            <p><strong>macOS:</strong></p>
+            <p>下载并安装 <a href="https://www.docker.com/products/docker-desktop">Docker Desktop</a></p>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>创建配置目录</h3>
+            <pre><code>mkdir -p ~/openclaw
+cd ~/openclaw</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span>创建 Docker Compose 配置</h3>
+            <p>创建 docker-compose.yml 文件：</p>
+            <pre><code>version: '3.8'
+
+services:
+  openclaw:
+    image: openclaw/openclaw:latest
+    container_name: openclaw
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18789:18789"
+    volumes:
+      - openclaw-data:/root/.openclaw
+    environment:
+      - TZ=Asia/Shanghai
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+volumes:
+  openclaw-data:</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">4</span>启动容器</h3>
+            <pre><code>cd ~/openclaw
+docker compose up -d</code></pre>
+            <p>查看运行状态：</p>
+            <pre><code>docker compose logs -f</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">5</span>初始化配置</h3>
+            <p>进入容器进行初始化：</p>
+            <pre><code>docker compose exec openclaw openclaw onboard</code></pre>
+            <p>按提示完成配置：</p>
+            <ul>
+                <li>输入 API Key</li>
+                <li>选择聊天平台</li>
+                <li>配置认证信息</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">6</span>验证部署</h3>
+            <pre><code># 检查容器状态
+docker ps
+
+# 测试健康检查
+curl http://127.0.0.1:18789/health</code></pre>
+        </div>
+
+        <h2>常用命令</h2>
+        <pre><code># 启动
+docker compose start
+
+# 停止
+docker compose stop
+
+# 重启
+docker compose restart
+
+# 查看日志
+docker compose logs -f
+
+# 更新镜像
+docker compose pull
+docker compose up -d
+
+# 进入容器
+docker compose exec openclaw /bin/bash</code></pre>
+
+        <h2>安全配置</h2>
+        <p>生产环境建议：</p>
+        <pre><code># 只绑定本地访问
+ports:
+  - "127.0.0.1:18789:18789"
+
+# 使用反向代理 + HTTPS
+# 推荐 Caddy 或 Nginx + SSL 证书</code></pre>
+
+        <h2>数据持久化</h2>
+        <p>配置文件中提到的数据目录：</p>
+        <ul>
+            <li><code>~/clawd/</code> - 工作区、记忆、文件</li>
+            <li><code>~/.openclaw/</code> - 配置、凭证、会话</li>
+        </ul>
+
+        <h2>常见问题</h2>
+        <h3>Q: 端口被占用？</h3>
+        <p>修改 docker-compose.yml 中的端口映射</p>
+
+        <h3>Q: 内存不足？</h3>
+        <p>创建 Swap 或增加主机内存</p>
+
+        <h3>Q: 如何更新？</h3>
+        <pre><code>docker compose pull
+docker compose up -d</code></pre>
+
+    </main>
+</body>
+</html>

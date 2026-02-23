@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>腾讯云部署 OpenClaw 教程 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #f97316;
+            --primary-dark: #ea580c;
+            --bg: #0a0a0a;
+            --bg-secondary: #171717;
+            --text: #fafafa;
+            --text-secondary: #a3a3a3;
+            --border: #262626;
+            --success: #22c55e;
+            --code-bg: #0d0d0d;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .price-box { background: var(--bg-secondary); border: 1px solid var(--primary); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .price { font-size: 2rem; font-weight: bold; color: var(--primary); }
+        .price small { font-size: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .step { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .step-number { display: inline-block; background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 0.75rem; }
+        .warning { background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+        .warning-title { color: #f59e0b; font-weight: bold; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .success { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+        .success-title { color: #22c55e; font-weight: bold; margin-bottom: 0.5rem; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        .back-link:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav>
+                <a href="/">返回首页</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>腾讯云部署 OpenClaw</h1>
+        <p class="subtitle">使用腾讯云轻量服务器一键部署，稳定快速</p>
+
+        <div class="price-box">
+            <div class="price">¥45<span>/月</span></div>
+            <small>新用户首单更优惠</small>
+        </div>
+
+        <h2>为什么选择腾讯云？</h2>
+        <ul>
+            <li>✅ 香港/新加坡节点，国内访问快</li>
+            <li>✅ 无需备案即可使用</li>
+            <li>✅ 支持国际 AI API 直连</li>
+            <li>✅ 一键安装镜像</li>
+        </ul>
+
+        <h2>部署步骤</h2>
+
+        <div class="step">
+            <h3><span class="step-number">1</span>访问腾讯云开发者实验室</h3>
+            <p>打开腾讯云 OpenClaw 一键部署页面：</p>
+            <a href="https://cloud.tencent.com/developer/article/2624973" target="_blank">https://cloud.tencent.com/developer/article/2624973</a>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>购买轻量服务器</h3>
+            <p>选择配置：</p>
+            <ul>
+                <li><strong>香港区</strong> - 推荐，延迟低，无需备案</li>
+                <li><strong>新加坡区</strong> - 东南亚访问好</li>
+                <li>推荐 2核2G 以上配置</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span>SSH 登录服务器</h3>
+            <p>使用终端连接服务器：</p>
+            <pre><code>ssh root@你的服务器IP</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">4</span>运行安装脚本</h3>
+            <p>腾讯云提供了预装镜像，直接运行：</p>
+            <pre><code>curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+            <p>或使用一键部署命令：</p>
+            <pre><code>openclaw onboard</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">5</span>配置 API Key</h3>
+            <p>按提示输入 API Key，可选平台：</p>
+            <ul>
+                <li>硅基流动 - https://cloud.siliconflow.cn</li>
+                <li>DeepSeek - https://platform.deepseek.com</li>
+                <li>OpenAI / Anthropic（需要代理）</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">6</span>配置防火墙</h3>
+            <p>在腾讯云控制台安全组添加规则：</p>
+            <ul>
+                <li>TCP 18789 - OpenClaw 网关</li>
+                <li>TCP 22 - SSH</li>
+            </ul>
+        </div>
+
+        <h2>获取 API Key</h2>
+        <p>推荐使用国内 API 提供商：</p>
+
+        <h3>1. 硅基流动</h3>
+        <a href="https://cloud.siliconflow.cn" target="_blank">https://cloud.siliconflow.cn</a>
+        <p>新用户送免费额度，支持 Qwen、DeepSeek 等模型</p>
+
+        <h3>2. DeepSeek API</h3>
+        <a href="https://platform.deepseek.com" target="_blank">https://platform.deepseek.com</a>
+        <p>性价比高，API 稳定</p>
+
+        <h3>3. 腾讯云混元</h3>
+        <p>腾讯自家大模型，新用户有免费额度</p>
+
+        <div class="warning">
+            <div class="warning-title">⚠️ 注意事项</div>
+            <ul>
+                <li>香港服务器无需备案，但要注意流量</li>
+                <li>2G 内存可能不够，建议创建 Swap</li>
+                <li>记得开放 18789 端口</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <div class="success-title">✅ 部署完成</div>
+            <p>访问方式：</p>
+            <ul>
+                <li>Web: http://服务器IP:18789</li>
+                <li>Telegram/飞书/钉钉 发送消息即可</li>
+            </ul>
+        </div>
+
+        <h2>常用命令</h2>
+        <pre><code># 查看状态
+openclaw status
+
+# 重启服务
+openclaw restart
+
+# 更新版本
+openclaw update
+
+# 查看日志
+openclaw logs</code></pre>
+
+    </main>
+</body>
+</html>
