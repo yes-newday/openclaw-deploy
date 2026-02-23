@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 新手必备技能 | 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; --skill: #8B5CF6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        
+        .page-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px); }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 1rem; position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto; flex-shrink: 0; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 1px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.25rem; }
+        .sidebar-nav a { display: block; padding: 0.5rem 0.75rem; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 900px; }
+        
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        
+        .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .skill-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; transition: all 0.3s; }
+        .skill-card:hover { transform: translateY(-2px); border-color: var(--skill); }
+        .skill-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .skill-name { font-size: 1.1rem; font-weight: bold; color: var(--text); margin-bottom: 0.5rem; }
+        .skill-desc { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.75rem; }
+        .skill-install { background: var(--code-bg); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; }
+        .skill-install code { color: #a5b4fc; }
+        
+        .info-box { background: rgba(139, 92, 246, 0.1); border: 1px solid var(--skill); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .info-title { color: var(--skill); font-weight: bold; margin-bottom: 0.5rem; }
+        
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">本文目录</div>
+            <ul class="sidebar-nav">
+                <li><a href="#what">什么是 Skill</a></li>
+                <li><a href="#install">安装方式</a></li>
+                <li><a href="#must-have">必备技能</a></li>
+                <li><a href="#productivity">效率技能</a></li>
+                <li><a href="#dev">开发技能</a></li>
+                <li><a href="#ai">AI 技能</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 2rem;">其他教程</div>
+            <ul class="sidebar-nav">
+                <li><a href="alibaba.html">阿里云部署</a></li>
+                <li><a href="tencent.html">腾讯云部署</a></li>
+                <li><a href="docker.html">Docker 部署</a></li>
+                <li><a href="feishu.html">飞书接入</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <a href="/" class="back-link">← 返回首页</a>
+            <h1>🎯 新手必备技能</h1>
+            <p class="subtitle">OpenClaw 热门 Skills 推荐及安装命令</p>
+
+            <div class="info-box">
+                <div class="info-title">💡 什么是 Skills？</div>
+                <p>Skills（技能）是 OpenClaw 的扩展功能，可以让你的 AI 助手具备各种能力，如搜索、编程、文件处理等。通过安装不同的 Skills，你可以定制化你的 OpenClaw。</p>
+            </div>
+
+            <h2 id="install">安装方式</h2>
+            
+            <h3>方式一：命令行安装</h3>
+            <pre><code># 安装单个 Skill
+openclaw skill install 技能名
+
+# 查看可用技能列表
+openclaw skill list
+
+# 更新所有技能
+openclaw skill update</code></pre>
+
+            <h3>方式二：提示词安装</h3>
+            <p>直接发送安装提示词给 OpenClaw：</p>
+            <pre><code>请帮我安装 [技能名] 技能</code></pre>
+
+            <h2 id="must-have">🔥 必备技能（强烈推荐）</h2>
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🔍</div>
+                    <div class="skill-name">Web Search</div>
+                    <div class="skill-desc">联网搜索能力，可以实时获取互联网上的最新信息</div>
+                    <div class="skill-install"><code>openclaw skill install web-search</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📝</div>
+                    <div class="skill-name">Fetch</div>
+                    <div class="skill-desc">网页内容抓取，可以获取任意网页的完整内容</div>
+                    <div class="skill-install"><code>openclaw skill install fetch</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🖥️</div>
+                    <div class="skill-name">Bash</div>
+                    <div class="skill-desc">执行终端命令，在服务器上运行各种命令行工具</div>
+                    <div class="skill-install"><code>openclaw skill install bash</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📁</div>
+                    <div class="skill-name">Read Files</div>
+                    <div class="skill-desc">文件读取，支持读取各种格式的文件内容</div>
+                    <div class="skill-install"><code>openclaw skill install read-files</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🌐</div>
+                    <div class="skill-name">Browser</div>
+                    <div class="skill-desc">浏览器控制，可以自动化操作网页</div>
+                    <div class="skill-install"><code>openclaw skill install browser</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📋</div>
+                    <div class="skill-name">Clipboard</div>
+                    <div class="skill-desc">剪贴板管理，读取和写入系统剪贴板</div>
+                    <div class="skill-install"><code>openclaw skill install clipboard</code></div>
+                </div>
+            </div>
+
+            <h2 id="productivity">⚡ 效率提升技能</h2>
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <div class="skill-name">PDF</div>
+                    <div class="skill-desc">PDF 处理，提取、转换、生成 PDF 文件</div>
+                    <div class="skill-install"><code>openclaw skill install pdf</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🖼️</div>
+                    <div class="skill-name">Image</div>
+                    <div class="skill-desc">图像处理，图片识别、转换、编辑</div>
+                    <div class="skill-install"><code>openclaw skill install image</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📧</div>
+                    <div class="skill-name">Email</div>
+                    <div class="skill-desc">邮件管理，发送和接收电子邮件</div>
+                    <div class="skill-install"><code>openclaw skill install email</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📅</div>
+                    <div class="skill-name">Calendar</div>
+                    <div class="skill-desc">日历管理，创建和管理日程提醒</div>
+                    <div class="skill-install"><code>openclaw skill install calendar</code></div>
+                </div>
+            </div>
+
+            <h2 id="dev">💻 开发技能</h2>
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🐙</div>
+                    <div class="skill-name">Git</div>
+                    <div class="skill-desc">Git 版本控制，提交、推送、拉取代码</div>
+                    <div class="skill-install"><code>openclaw skill install git</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🐳</div>
+                    <div class="skill-name">Docker</div>
+                    <div class="skill-desc">Docker 管理，容器操作和镜像管理</div>
+                    <div class="skill-install"><code>openclaw skill install docker</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">☁️</div>
+                    <div class="skill-name">Cloudflare</div>
+                    <div class="skill-desc">Cloudflare 管理，DNS、Pages、Workers</div>
+                    <div class="skill-install"><code>openclaw skill install cloudflare</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📦</div>
+                    <div class="skill-name">NPM</div>
+                    <div class="skill-desc">npm 包管理，安装和管理 Node.js 包</div>
+                    <div class="skill-install"><code>openclaw skill install npm</code></div>
+                </div>
+            </div>
+
+            <h2 id="ai">🤖 AI 增强技能</h2>
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🎨</div>
+                    <div class="skill-name">DALL-E</div>
+                    <div class="skill-desc">AI 绘画，生成图片和艺术作品</div>
+                    <div class="skill-install"><code>openclaw skill install dalle</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🎬</div>
+                    <div class="skill-name">Video</div>
+                    <div class="skill-desc">视频处理，下载、转换、编辑视频</div>
+                    <div class="skill-install"><code>openclaw skill install video</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🔊</div>
+                    <div class="skill-name">TTS</div>
+                    <div class="skill-desc">文字转语音，生成语音输出</div>
+                    <div class="skill-install"><code>openclaw skill install tts</code></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🎙️</div>
+                    <div class="skill-name">Whisper</div>
+                    <div class="skill-desc">语音转文字，音频视频字幕生成</div>
+                    <div class="skill-install"><code>openclaw skill install whisper</code></div>
+                </div>
+            </div>
+
+            <h2>一键安装所有必备技能</h2>
+            <pre><code># 安装所有必备技能
+openclaw skill install web-search
+openclaw skill install fetch
+openclaw skill install bash
+openclaw skill install read-files
+openclaw skill install browser
+openclaw skill install clipboard</code></pre>
+
+            <p>或者直接告诉 OpenClaw：</p>
+            <pre><code>请帮我安装所有必备技能</code></pre>
+
+        </main>
+    </div>
+</body>
+</html>

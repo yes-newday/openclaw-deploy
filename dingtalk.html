@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钉钉机器人接入 OpenClaw 教程 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; --dingtalk: #208EF5; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        
+        .page-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px); }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 1rem; position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto; flex-shrink: 0; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 1px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.25rem; }
+        .sidebar-nav a { display: block; padding: 0.5rem 0.75rem; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 900px; }
+        
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .dingtalk-tag { background: var(--dingtalk); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; margin-right: 0.5rem; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        .step { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .step-number { display: inline-block; background: var(--dingtalk); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 0.75rem; }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">本文目录</div>
+            <ul class="sidebar-nav">
+                <li><a href="#prereq">前置要求</a></li>
+                <li><a href="#step1">创建钉钉应用</a></li>
+                <li><a href="#step2">配置应用权限</a></li>
+                <li><a href="#step3">获取 Webhook</a></li>
+                <li><a href="#step4">配置 OpenClaw</a></li>
+                <li><a href="#verify">验证配置</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 2rem;">其他教程</div>
+            <ul class="sidebar-nav">
+                <li><a href="feishu.html">飞书接入</a></li>
+                <li><a href="solution-apikey.html">API Key 配置</a></li>
+                <li><a href="vps.html">服务器部署</a></li>
+                <li><a href="docker.html">Docker 部署</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <a href="/" class="back-link">← 返回首页</a>
+            <h1><span class="dingtalk-tag">钉钉</span>机器人接入 OpenClaw</h1>
+            <p class="subtitle">将 OpenClaw 接入钉钉，实现智能助手功能</p>
+
+            <h2 id="prereq">前置要求</h2>
+            <ul>
+                <li>✅ 已部署完成的 OpenClaw 服务器</li>
+                <li>✅ 钉钉管理员账号</li>
+                <li>✅ 有效的 API Key</li>
+            </ul>
+
+            <h2 id="step1">部署步骤</h2>
+
+            <div class="step">
+                <h3><span class="step-number">1</span>创建钉钉应用</h3>
+                <p>1. 打开 <a href="https://open.dingtalk.com/" target="_blank">钉钉开放平台</a></p>
+                <p>2. 使用钉钉账号登录</p>
+                <p>3. 点击「应用开发」→「创建应用」</p>
+                <p>4. 填写应用名称（如 OpenClaw 助手）</p>
+                <p>5. 获取 App Key 和 App Secret</p>
+            </div>
+
+            <div class="step">
+                <h3><span class="step-number">2</span>配置应用权限</h3>
+                <p>在应用管理页面，点击「权限管理」，添加以下权限：</p>
+                <ul>
+                    <li><code>im:robot</code> - 机器人消息</li>
+                    <li><code>im:chat</code> - 群会话</li>
+                    <li><code>im:message</code> - 消息相关</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3><span class="step-number">3</span>创建自定义机器人</h3>
+                <p>1. 进入需要接入的钉钉群</p>
+                <p>2. 点击群设置 → 智能群助手</p>
+                <p>3. 点击「添加机器人」</p>
+                <p>4. 选择「自定义」机器人</p>
+                <p>5. 设置机器人名称，获取 Webhook 地址</p>
+                <p>Webhook 格式：</p>
+                <pre><code>https://oapi.dingtalk.com/robot/send?access_token=xxxxxxxxxxxxxx</code></pre>
+            </div>
+
+            <div class="step">
+                <h3><span class="step-number">4</span>在 OpenClaw 中配置钉钉</h3>
+                <p>编辑配置文件 <code>~/.openclaw/openclaw.json</code>：</p>
+                <pre><code>{
+  "channels": {
+    "dingtalk": {
+      "enabled": true,
+      "webhook": "你的钉钉Webhook地址",
+      "secret": "你的加签密钥（可选）"
+    }
+  }
+}</code></pre>
+                <p>或使用命令行：</p>
+                <pre><code>openclaw config set channels.dingtalk.enabled true
+openclaw config set channels.dingtalk.webhook "你的Webhook地址"</code></pre>
+            </div>
+
+            <div class="step">
+                <h3><span class="step-number">5</span>重启服务</h3>
+                <pre><code>openclaw restart</code></pre>
+            </div>
+
+            <h2 id="verify">验证配置</h2>
+            <p>在钉钉群中 @机器人 发送消息，测试是否正常工作。</p>
+
+            <h2>常见问题</h2>
+            <h3>Q: 收不到消息？</h3>
+            <ul>
+                <li>检查 Webhook 地址是否正确</li>
+                <li>确认机器人已添加到群聊</li>
+                <li>检查应用权限是否配置完整</li>
+            </ul>
+
+            <h3>Q: 如何开启加签？</h3>
+            <p>在钉钉机器人设置中开启「加签」，将生成的 secret 配置到 OpenClaw 中。</p>
+
+        </main>
+    </div>
+</body>
+</html>
