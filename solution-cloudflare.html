@@ -9,10 +9,19 @@
         :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
         header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
         nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
-        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        
+        .page-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px); }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 1rem; position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto; flex-shrink: 0; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 1px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.25rem; }
+        .sidebar-nav a { display: block; padding: 0.5rem 0.75rem; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 900px; }
+        
         h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
         h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
@@ -24,11 +33,15 @@
         .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
         .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
         .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
-        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin.5rem;-bottom: 0 }
+        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
         ul { margin: 1rem 0; padding-left: 1.5rem; }
         li { margin: 0.5rem 0; color: var(--text-secondary); }
         a { color: var(--primary); }
         .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
+        th { background: var(--bg-secondary); }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { padding: 1.5rem; } }
     </style>
 </head>
 <body>
@@ -39,14 +52,35 @@
         </div>
     </header>
 
-    <main>
-        <a href="/" class="back-link">← 返回首页</a>
-        <h1>Cloudflare 构建错误</h1>
-        <p class="subtitle">部署静态网站时出现的构建问题</p>
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">目录</div>
+            <ul class="sidebar-nav">
+                <li><a href="#error">错误信息</a></li>
+                <li><a href="#solution1">Missing entry-point</a></li>
+                <li><a href="#solution2">权限不足</a></li>
+                <li><a href="#solution3">项目类型错误</a></li>
+                <li><a href="#config">正确配置</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 2rem;">其他问题</div>
+            <ul class="sidebar-nav">
+                <li><a href="solution-github-timeout.html">GitHub 连接</a></li>
+                <li><a href="solution-nodejs.html">Node.js 版本</a></li>
+                <li><a href="solution-apikey.html">API Key 配置</a></li>
+                <li><a href="solution-memory.html">内存不足</a></li>
+                <li><a href="feishu.html">飞书接入</a></li>
+            </ul>
+        </aside>
 
-        <div class="error-box">
-            <div class="error-title">❌ 常见错误</div>
-            <pre><code># 错误1: Missing entry-point
+        <main class="main-content">
+            <a href="/" class="back-link">← 返回首页</a>
+            <h1>Cloudflare 构建错误</h1>
+            <p class="subtitle">部署静态网站时出现的构建问题</p>
+
+            <div class="error-box" id="error">
+                <div class="error-title">❌ 常见错误</div>
+                <pre><code># 错误1: Missing entry-point
 ✘ [ERROR] Missing entry-point to Worker script or to assets directory
 
 # 错误2: 权限不足
@@ -54,69 +88,69 @@
 
 # 错误3: 构建命令错误
 Could not find build command</code></pre>
-        </div>
+            </div>
 
-        <h2>解决方案</h2>
+            <h2>解决方案</h2>
 
-        <h3>错误1：Missing entry-point</h3>
-        <p>Cloudflare 把你的是 Workers 项目当成静态网站了</p>
-        <div class="solution-box">
-            <div class="solution-title">✅ 解决方法</div>
-            <p>在构建设置中：</p>
-            <ul>
-                <li><strong>构建命令</strong> 填 <code>echo done</code></li>
-                <li><strong>输出目录</strong> 填 <code>/</code></li>
-            </ul>
-        </div>
+            <h3 id="solution1">错误1：Missing entry-point</h3>
+            <p>Cloudflare 把你的是 Workers 项目当成静态网站了</p>
+            <div class="solution-box">
+                <div class="solution-title">✅ 解决方法</div>
+                <p>在构建设置中：</p>
+                <ul>
+                    <li><strong>构建命令</strong> 填 <code>echo done</code></li>
+                    <li><strong>输出目录</strong> 填 <code>/</code></li>
+                </ul>
+            </div>
 
-        <h3>错误2：权限不足</h3>
-        <p>构建命令为空导致的错误</p>
-        <div class="solution-box">
-            <div class="solution-title">✅ 解决方法</div>
-            <p>不要留空构建命令，填入：</p>
-            <pre><code>echo done</code></pre>
-        </div>
+            <h3 id="solution2">错误2：权限不足</h3>
+            <p>构建命令为空导致的错误</p>
+            <div class="solution-box">
+                <div class="solution-title">✅ 解决方法</div>
+                <p>不要留空构建命令，填入：</p>
+                <pre><code>echo done</code></pre>
+            </div>
 
-        <h3>错误3：创建项目类型错误</h3>
-        <p>创建成了 Workers 而不是 Pages</p>
-        <div class="solution-box">
-            <div class="solution-title">✅ 解决方法</div>
-            <p>删除项目，重新创建：</p>
-            <ol>
-                <li>进入 <strong>Workers & Pages</strong></li>
-                <li>点击 <strong>创建应用程序</strong></li>
-                <li>选择 <strong>Pages</strong> → <strong>连接到 Git</strong></li>
-                <li>不要选 Workers</li>
-            </ol>
-        </div>
+            <h3 id="solution3">错误3：创建项目类型错误</h3>
+            <p>创建成了 Workers 而不是 Pages</p>
+            <div class="solution-box">
+                <div class="solution-title">✅ 解决方法</div>
+                <p>删除项目，重新创建：</p>
+                <ol>
+                    <li>进入 <strong>Workers & Pages</strong></li>
+                    <li>点击 <strong>创建应用程序</strong></li>
+                    <li>选择 <strong>Pages</strong> → <strong>连接到 Git</strong></li>
+                    <li>不要选 Workers</li>
+                </ol>
+            </div>
 
-        <h2>正确的 Pages 配置</h2>
-        <table style="width:100%; border-collapse: collapse; margin: 1rem 0;">
-            <tr style="background: var(--bg-secondary);">
-                <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">设置项</th>
-                <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">正确值</th>
-            </tr>
-            <tr>
-                <td style="border:1px solid var(--border); padding:0.75rem;">构建命令</td>
-                <td style="border:1px solid var(--border); padding:0.75rem;"><code>echo done</code></td>
-            </tr>
-            <tr>
-                <td style="border:1px solid var(--border); padding:0.75rem;">输出目录</td>
-                <td style="border:1px solid var(--border); padding:0.75rem;"><code>/</code></td>
-            </tr>
-            <tr>
-                <td style="border:1px solid var(--border); padding:0.75rem;">Node.js 版本</td>
-                <td style="border:1px solid var(--border); padding:0.75rem;">无需设置</td>
-            </tr>
-        </table>
+            <h2 id="config">正确的 Pages 配置</h2>
+            <table>
+                <tr style="background: var(--bg-secondary);">
+                    <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">设置项</th>
+                    <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">正确值</th>
+                </tr>
+                <tr>
+                    <td style="border:1px solid var(--border); padding:0.75rem;">构建命令</td>
+                    <td style="border:1px solid var(--border); padding:0.75rem;"><code>echo done</code></td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid var(--border); padding:0.75rem;">输出目录</td>
+                    <td style="border:1px solid var(--border); padding:0.75rem;"><code>/</code></td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid var(--border); padding:0.75rem;">Node.js 版本</td>
+                    <td style="border:1px solid var(--border); padding:0.75rem;">无需设置</td>
+                </tr>
+            </table>
 
-        <h2>常见问题</h2>
-        <h3>Q: 页面只显示 Hello World？</h3>
-        <p>确保 GitHub 仓库有正确的文件，并点击"重新部署"</p>
+            <h2 id="faq">常见问题</h2>
+            <h3>Q: 页面只显示 Hello World？</h3>
+            <p>确保 GitHub 仓库有正确的文件，并点击"重新部署"</p>
 
-        <h3>Q: 部署成功但显示 404？</h3>
-        <p>检查输出目录是否正确设为 <code>/</code></p>
-
-    </main>
+            <h3>Q: 部署成功但显示 404？</h3>
+            <p>检查输出目录是否正确设为 <code>/</code></p>
+        </main>
+    </div>
 </body>
 </html>

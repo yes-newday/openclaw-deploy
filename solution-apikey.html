@@ -9,10 +9,19 @@
         :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
         header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
         nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
-        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        
+        .page-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px); }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 1rem; position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto; flex-shrink: 0; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 1px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.25rem; }
+        .sidebar-nav a { display: block; padding: 0.5rem 0.75rem; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 900px; }
+        
         h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
         h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
@@ -23,8 +32,6 @@
         pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
         .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
         .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
-        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
         ul { margin: 1rem 0; padding-left: 1.5rem; }
         li { margin: 0.5rem 0; color: var(--text-secondary); }
         a { color: var(--primary); }
@@ -32,6 +39,7 @@
         table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
         th, td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
         th { background: var(--bg-secondary); }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { padding: 1.5rem; } }
     </style>
 </head>
 <body>
@@ -42,14 +50,35 @@
         </div>
     </header>
 
-    <main>
-        <a href="/" class="back-link">← 返回首页</a>
-        <h1>API Key 配置失败</h1>
-        <p class="subtitle">无法获取 API Key 或 Key 额度不足</p>
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">目录</div>
+            <ul class="sidebar-nav">
+                <li><a href="#error">错误信息</a></li>
+                <li><a href="#providers">推荐平台</a></li>
+                <li><a href="#step1">获取 API Key</a></li>
+                <li><a href="#step2">配置 OpenClaw</a></li>
+                <li><a href="#verify">验证配置</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 2rem;">其他问题</div>
+            <ul class="sidebar-nav">
+                <li><a href="solution-github-timeout.html">GitHub 连接</a></li>
+                <li><a href="solution-nodejs.html">Node.js 版本</a></li>
+                <li><a href="solution-cloudflare.html">Cloudflare 构建</a></li>
+                <li><a href="solution-memory.html">内存不足</a></li>
+                <li><a href="feishu.html">飞书接入</a></li>
+            </ul>
+        </aside>
 
-        <div class="error-box">
-            <div class="error-title">❌ 常见错误</div>
-            <pre><code># 错误1: Invalid API key
+        <main class="main-content">
+            <a href="/" class="back-link">← 返回首页</a>
+            <h1>API Key 配置失败</h1>
+            <p class="subtitle">无法获取 API Key 或 Key 额度不足</p>
+
+            <div class="error-box" id="error">
+                <div class="error-title">❌ 常见错误</div>
+                <pre><code># 错误1: Invalid API key
 Error: Invalid API key provided
 
 # 错误2: 额度不足
@@ -57,53 +86,53 @@ Error: Insufficient credits
 
 # 错误3: 模型不支持
 Error: Model not supported</code></pre>
-        </div>
+            </div>
 
-        <h2>推荐的 API 提供商</h2>
-        <table>
-            <tr><th>平台</th><th>特点</th><th>网址</th></tr>
-            <tr>
-                <td>硅基流动</td>
-                <td>国内直连，免费额度多</td>
-                <td><a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></td>
-            </tr>
-            <tr>
-                <td>DeepSeek</td>
-                <td>性价比高</td>
-                <td><a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></td>
-            </tr>
-            <tr>
-                <td>智谱 AI</td>
-                <td>GLM 模型，新用户送 Tokens</td>
-                <td><a href="https://www.bigmodel.cn" target="_blank">bigmodel.cn</a></td>
-            </tr>
-            <tr>
-                <td>阿里云百炼</td>
-                <td>新用户免费额度</td>
-                <td><a href="https://www.aliyun.com/product/ai" target="_blank">aliyun.com</a></td>
-            </tr>
-        </table>
+            <h2 id="providers">推荐的 API 提供商</h2>
+            <table>
+                <tr><th>平台</th><th>特点</th><th>网址</th></tr>
+                <tr>
+                    <td>硅基流动</td>
+                    <td>国内直连，免费额度多</td>
+                    <td><a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></td>
+                </tr>
+                <tr>
+                    <td>DeepSeek</td>
+                    <td>性价比高</td>
+                    <td><a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></td>
+                </tr>
+                <tr>
+                    <td>智谱 AI</td>
+                    <td>GLM 模型，新用户送 Tokens</td>
+                    <td><a href="https://www.bigmodel.cn" target="_blank">bigmodel.cn</a></td>
+                </tr>
+                <tr>
+                    <td>阿里云百炼</td>
+                    <td>新用户免费额度</td>
+                    <td><a href="https://www.aliyun.com/product/ai" target="_blank">aliyun.com</a></td>
+                </tr>
+            </table>
 
-        <h2>配置步骤</h2>
+            <h2 id="step1">配置步骤</h2>
 
-        <h3>1. 获取 API Key</h3>
-        <p>以硅基流动为例：</p>
-        <ol>
-            <li>访问 <a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></li>
-            <li>注册/登录账号</li>
-            <li>进入「API 密钥」页面</li>
-            <li>点击「新建密钥」</li>
-            <li>复制生成的 Key</li>
-        </ol>
+            <h3>1. 获取 API Key</h3>
+            <p>以硅基流动为例：</p>
+            <ol>
+                <li>访问 <a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></li>
+                <li>注册/登录账号</li>
+                <li>进入「API 密钥」页面</li>
+                <li>点击「新建密钥」</li>
+                <li>复制生成的 Key</li>
+            </ol>
 
-        <h3>2. 配置 OpenClaw</h3>
-        <pre><code># 方式1: 交互式配置
+            <h3 id="step2">2. 配置 OpenClaw</h3>
+            <pre><code># 方式1: 交互式配置
 openclaw config</code></pre>
 
-        <pre><code># 方式2: 直接编辑配置
+            <pre><code># 方式2: 直接编辑配置
 nano ~/.openclaw/openclaw.json</code></pre>
 
-        <pre><code># 配置示例
+            <pre><code># 配置示例
 {
   "models": {
     "default": {
@@ -114,23 +143,23 @@ nano ~/.openclaw/openclaw.json</code></pre>
   }
 }</code></pre>
 
-        <h2>验证配置</h2>
-        <pre><code># 测试 API 连接
+            <h2 id="verify">验证配置</h2>
+            <pre><code># 测试 API 连接
 openclaw test
 
 # 或查看日志
 openclaw logs</code></pre>
 
-        <h2>常见问题</h2>
-        <h3>Q: API Key 无效？</h3>
-        <p>检查 Key 是否复制完整，不要有空格或换行</p>
+            <h2 id="faq">常见问题</h2>
+            <h3>Q: API Key 无效？</h3>
+            <p>检查 Key 是否复制完整，不要有空格或换行</p>
 
-        <h3>Q: 额度用完了？</h3>
-        <p>登录对应平台充值或换用其他免费平台</p>
+            <h3>Q: 额度用完了？</h3>
+            <p>登录对应平台充值或换用其他免费平台</p>
 
-        <h3>Q: 模型不支持？</h3>
-        <p>使用平台支持的模型名称，可参考平台文档</p>
-
-    </main>
+            <h3>Q: 模型不支持？</h3>
+            <p>使用平台支持的模型名称，可参考平台文档</p>
+        </main>
+    </div>
 </body>
 </html>

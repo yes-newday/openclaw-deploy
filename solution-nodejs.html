@@ -9,10 +9,19 @@
         :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
         header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
         nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
-        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        
+        .page-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px); }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 1rem; position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto; flex-shrink: 0; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 1px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li { margin-bottom: 0.25rem; }
+        .sidebar-nav a { display: block; padding: 0.5rem 0.75rem; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(249, 115, 22, 0.15); color: var(--primary); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 900px; }
+        
         h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
         h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
@@ -29,6 +38,7 @@
         li { margin: 0.5rem 0; color: var(--text-secondary); }
         a { color: var(--primary); }
         .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { padding: 1.5rem; } }
     </style>
 </head>
 <body>
@@ -39,25 +49,47 @@
         </div>
     </header>
 
-    <main>
-        <a href="/" class="back-link">← 返回首页</a>
-        <h1>Node.js 版本不兼容</h1>
-        <p class="subtitle">OpenClaw 需要 Node.js 22+，当前版本过低导致安装失败</p>
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">目录</div>
+            <ul class="sidebar-nav">
+                <li><a href="#error">错误信息</a></li>
+                <li><a href="#solution1">方案一：nvm</a></li>
+                <li><a href="#solution2">方案二：fnm</a></li>
+                <li><a href="#solution3">方案三：NodeSource</a></li>
+                <li><a href="#solution4">方案四：Windows</a></li>
+                <li><a href="#solution5">方案五：Docker</a></li>
+                <li><a href="#check">检查版本</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 2rem;">其他问题</div>
+            <ul class="sidebar-nav">
+                <li><a href="solution-github-timeout.html">GitHub 连接</a></li>
+                <li><a href="solution-cloudflare.html">Cloudflare 构建</a></li>
+                <li><a href="solution-apikey.html">API Key 配置</a></li>
+                <li><a href="solution-memory.html">内存不足</a></li>
+                <li><a href="feishu.html">飞书接入</a></li>
+            </ul>
+        </aside>
 
-        <div class="error-box">
-            <div class="error-title">❌ 错误信息</div>
-            <pre><code># 错误示例
+        <main class="main-content">
+            <a href="/" class="back-link">← 返回首页</a>
+            <h1>Node.js 版本不兼容</h1>
+            <p class="subtitle">OpenClaw 需要 Node.js 22+，当前版本过低导致安装失败</p>
+
+            <div class="error-box" id="error">
+                <div class="error-title">❌ 错误信息</div>
+                <pre><code># 错误示例
 openclaw: requires Node.js >= 22.0.0, but the loaded version is v18.19.0
 
 # 或
-node: --openssl-legacy-provider is not allowed
-</code></pre>
-        </div>
+node: --openssl-legacy-provider is not allowed</code></pre>
+            </div>
 
-        <h2>解决方案</h2>
+            <h2>解决方案</h2>
 
-        <h3>方案一：使用 nvm 管理 Node.js 版本（推荐）</h3>
-        <pre><code># 安装 nvm (Linux/macOS)
+            <h3 id="solution1">方案一：使用 nvm 管理 Node.js 版本（推荐）</h3>
+            <pre><code># 安装 nvm (Linux/macOS)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source ~/.bashrc
 
@@ -71,8 +103,8 @@ nvm alias default 22
 # 验证
 node --version</code></pre>
 
-        <h3>方案二：使用 fnm 管理 Node.js（更快）</h3>
-        <pre><code># 安装 fnm
+            <h3 id="solution2">方案二：使用 fnm 管理 Node.js（更快）</h3>
+            <pre><code># 安装 fnm
 curl -fsSL https://fnm.install | bash
 source ~/.bashrc
 
@@ -81,42 +113,42 @@ fnm install 22
 fnm use 22
 fnm default 22</code></pre>
 
-        <h3>方案三：使用 NodeSource 安装</h3>
-        <pre><code># Ubuntu/Debian
+            <h3 id="solution3">方案三：使用 NodeSource 安装</h3>
+            <pre><code># Ubuntu/Debian
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
 # 验证
 node --version</code></pre>
 
-        <h3>方案四：Windows 安装</h3>
-        <p>下载并安装 Node.js 22 LTS：</p>
-        <a href="https://nodejs.org/" target="_blank">https://nodejs.org/</a>
-        <p>建议使用 nvm-windows：</p>
-        <a href="https://github.com/coreybutler/nvm-windows" target="_blank">https://github.com/coreybutler/nvm-windows</a>
+            <h3 id="solution4">方案四：Windows 安装</h3>
+            <p>下载并安装 Node.js 22 LTS：</p>
+            <a href="https://nodejs.org/" target="_blank">https://nodejs.org/</a>
+            <p>建议使用 nvm-windows：</p>
+            <a href="https://github.com/coreybutler/nvm-windows" target="_blank">https://github.com/coreybutler/nvm-windows</a>
 
-        <h3>方案五：Docker（最简单）</h3>
-        <pre><code># 使用官方 Docker 镜像（内置 Node.js 22）
+            <h3 id="solution5">方案五：Docker（最简单）</h3>
+            <pre><code># 使用官方 Docker 镜像（内置 Node.js 22）
 docker pull openclaw/openclaw:latest
 docker run -d --name openclaw -p 18789:18789 openclaw/openclaw:latest</code></pre>
 
-        <h2>检查当前 Node.js 版本</h2>
-        <pre><code>node --version
+            <h2 id="check">检查当前 Node.js 版本</h2>
+            <pre><code>node --version
 npm --version
 
 # 或
 nvm ls</code></pre>
 
-        <h2>常见问题</h2>
-        <h3>Q: nvm 命令找不到？</h3>
-        <p>需要重新加载配置文件：</p>
-        <pre><code>source ~/.bashrc   # bash
+            <h2 id="faq">常见问题</h2>
+            <h3>Q: nvm 命令找不到？</h3>
+            <p>需要重新加载配置文件：</p>
+            <pre><code>source ~/.bashrc   # bash
 source ~/.zshrc    # zsh
 source ~/.profile  # 系统默认</code></pre>
 
-        <h3>Q: 升级后还是显示旧版本？</h3>
-        <p>需要先关闭当前终端，重新打开一个终端</p>
-
-    </main>
+            <h3>Q: 升级后还是显示旧版本？</h3>
+            <p>需要先关闭当前终端，重新打开一个终端</p>
+        </main>
+    </div>
 </body>
 </html>
