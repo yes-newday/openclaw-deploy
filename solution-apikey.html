@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key 配置失败解决方案 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
+        th { background: var(--bg-secondary); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>API Key 配置失败</h1>
+        <p class="subtitle">无法获取 API Key 或 Key 额度不足</p>
+
+        <div class="error-box">
+            <div class="error-title">❌ 常见错误</div>
+            <pre><code># 错误1: Invalid API key
+Error: Invalid API key provided
+
+# 错误2: 额度不足
+Error: Insufficient credits
+
+# 错误3: 模型不支持
+Error: Model not supported</code></pre>
+        </div>
+
+        <h2>推荐的 API 提供商</h2>
+        <table>
+            <tr><th>平台</th><th>特点</th><th>网址</th></tr>
+            <tr>
+                <td>硅基流动</td>
+                <td>国内直连，免费额度多</td>
+                <td><a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></td>
+            </tr>
+            <tr>
+                <td>DeepSeek</td>
+                <td>性价比高</td>
+                <td><a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></td>
+            </tr>
+            <tr>
+                <td>智谱 AI</td>
+                <td>GLM 模型，新用户送 Tokens</td>
+                <td><a href="https://www.bigmodel.cn" target="_blank">bigmodel.cn</a></td>
+            </tr>
+            <tr>
+                <td>阿里云百炼</td>
+                <td>新用户免费额度</td>
+                <td><a href="https://www.aliyun.com/product/ai" target="_blank">aliyun.com</a></td>
+            </tr>
+        </table>
+
+        <h2>配置步骤</h2>
+
+        <h3>1. 获取 API Key</h3>
+        <p>以硅基流动为例：</p>
+        <ol>
+            <li>访问 <a href="https://cloud.siliconflow.cn" target="_blank">cloud.siliconflow.cn</a></li>
+            <li>注册/登录账号</li>
+            <li>进入「API 密钥」页面</li>
+            <li>点击「新建密钥」</li>
+            <li>复制生成的 Key</li>
+        </ol>
+
+        <h3>2. 配置 OpenClaw</h3>
+        <pre><code># 方式1: 交互式配置
+openclaw config</code></pre>
+
+        <pre><code># 方式2: 直接编辑配置
+nano ~/.openclaw/openclaw.json</code></pre>
+
+        <pre><code># 配置示例
+{
+  "models": {
+    "default": {
+      "provider": "siliconflow",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "apiKey": "sk-xxxxxxxxxxxx"
+    }
+  }
+}</code></pre>
+
+        <h2>验证配置</h2>
+        <pre><code># 测试 API 连接
+openclaw test
+
+# 或查看日志
+openclaw logs</code></pre>
+
+        <h2>常见问题</h2>
+        <h3>Q: API Key 无效？</h3>
+        <p>检查 Key 是否复制完整，不要有空格或换行</p>
+
+        <h3>Q: 额度用完了？</h3>
+        <p>登录对应平台充值或换用其他免费平台</p>
+
+        <h3>Q: 模型不支持？</h3>
+        <p>使用平台支持的模型名称，可参考平台文档</p>
+
+    </main>
+</body>
+</html>

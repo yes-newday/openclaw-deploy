@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js 版本不兼容解决方案 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>Node.js 版本不兼容</h1>
+        <p class="subtitle">OpenClaw 需要 Node.js 22+，当前版本过低导致安装失败</p>
+
+        <div class="error-box">
+            <div class="error-title">❌ 错误信息</div>
+            <pre><code># 错误示例
+openclaw: requires Node.js >= 22.0.0, but the loaded version is v18.19.0
+
+# 或
+node: --openssl-legacy-provider is not allowed
+</code></pre>
+        </div>
+
+        <h2>解决方案</h2>
+
+        <h3>方案一：使用 nvm 管理 Node.js 版本（推荐）</h3>
+        <pre><code># 安装 nvm (Linux/macOS)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+
+# 安装 Node.js 22
+nvm install 22
+nvm use 22
+
+# 设置默认版本
+nvm alias default 22
+
+# 验证
+node --version</code></pre>
+
+        <h3>方案二：使用 fnm 管理 Node.js（更快）</h3>
+        <pre><code># 安装 fnm
+curl -fsSL https://fnm.install | bash
+source ~/.bashrc
+
+# 安装并使用 Node.js 22
+fnm install 22
+fnm use 22
+fnm default 22</code></pre>
+
+        <h3>方案三：使用 NodeSource 安装</h3>
+        <pre><code># Ubuntu/Debian
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 验证
+node --version</code></pre>
+
+        <h3>方案四：Windows 安装</h3>
+        <p>下载并安装 Node.js 22 LTS：</p>
+        <a href="https://nodejs.org/" target="_blank">https://nodejs.org/</a>
+        <p>建议使用 nvm-windows：</p>
+        <a href="https://github.com/coreybutler/nvm-windows" target="_blank">https://github.com/coreybutler/nvm-windows</a>
+
+        <h3>方案五：Docker（最简单）</h3>
+        <pre><code># 使用官方 Docker 镜像（内置 Node.js 22）
+docker pull openclaw/openclaw:latest
+docker run -d --name openclaw -p 18789:18789 openclaw/openclaw:latest</code></pre>
+
+        <h2>检查当前 Node.js 版本</h2>
+        <pre><code>node --version
+npm --version
+
+# 或
+nvm ls</code></pre>
+
+        <h2>常见问题</h2>
+        <h3>Q: nvm 命令找不到？</h3>
+        <p>需要重新加载配置文件：</p>
+        <pre><code>source ~/.bashrc   # bash
+source ~/.zshrc    # zsh
+source ~/.profile  # 系统默认</code></pre>
+
+        <h3>Q: 升级后还是显示旧版本？</h3>
+        <p>需要先关闭当前终端，重新打开一个终端</p>
+
+    </main>
+</body>
+</html>

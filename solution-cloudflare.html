@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare 构建错误解决方案 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin.5rem;-bottom: 0 }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>Cloudflare 构建错误</h1>
+        <p class="subtitle">部署静态网站时出现的构建问题</p>
+
+        <div class="error-box">
+            <div class="error-title">❌ 常见错误</div>
+            <pre><code># 错误1: Missing entry-point
+✘ [ERROR] Missing entry-point to Worker script or to assets directory
+
+# 错误2: 权限不足
+/bin/sh: 1: : 权限不足
+
+# 错误3: 构建命令错误
+Could not find build command</code></pre>
+        </div>
+
+        <h2>解决方案</h2>
+
+        <h3>错误1：Missing entry-point</h3>
+        <p>Cloudflare 把你的是 Workers 项目当成静态网站了</p>
+        <div class="solution-box">
+            <div class="solution-title">✅ 解决方法</div>
+            <p>在构建设置中：</p>
+            <ul>
+                <li><strong>构建命令</strong> 填 <code>echo done</code></li>
+                <li><strong>输出目录</strong> 填 <code>/</code></li>
+            </ul>
+        </div>
+
+        <h3>错误2：权限不足</h3>
+        <p>构建命令为空导致的错误</p>
+        <div class="solution-box">
+            <div class="solution-title">✅ 解决方法</div>
+            <p>不要留空构建命令，填入：</p>
+            <pre><code>echo done</code></pre>
+        </div>
+
+        <h3>错误3：创建项目类型错误</h3>
+        <p>创建成了 Workers 而不是 Pages</p>
+        <div class="solution-box">
+            <div class="solution-title">✅ 解决方法</div>
+            <p>删除项目，重新创建：</p>
+            <ol>
+                <li>进入 <strong>Workers & Pages</strong></li>
+                <li>点击 <strong>创建应用程序</strong></li>
+                <li>选择 <strong>Pages</strong> → <strong>连接到 Git</strong></li>
+                <li>不要选 Workers</li>
+            </ol>
+        </div>
+
+        <h2>正确的 Pages 配置</h2>
+        <table style="width:100%; border-collapse: collapse; margin: 1rem 0;">
+            <tr style="background: var(--bg-secondary);">
+                <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">设置项</th>
+                <th style="border:1px solid var(--border); padding:0.75rem; text-align:left;">正确值</th>
+            </tr>
+            <tr>
+                <td style="border:1px solid var(--border); padding:0.75rem;">构建命令</td>
+                <td style="border:1px solid var(--border); padding:0.75rem;"><code>echo done</code></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid var(--border); padding:0.75rem;">输出目录</td>
+                <td style="border:1px solid var(--border); padding:0.75rem;"><code>/</code></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid var(--border); padding:0.75rem;">Node.js 版本</td>
+                <td style="border:1px solid var(--border); padding:0.75rem;">无需设置</td>
+            </tr>
+        </table>
+
+        <h2>常见问题</h2>
+        <h3>Q: 页面只显示 Hello World？</h3>
+        <p>确保 GitHub 仓库有正确的文件，并点击"重新部署"</p>
+
+        <h3>Q: 部署成功但显示 404？</h3>
+        <p>检查输出目录是否正确设为 <code>/</code></p>
+
+    </main>
+</body>
+</html>

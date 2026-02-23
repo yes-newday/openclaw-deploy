@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub 连接超时解决方案 | OpenClaw 部署教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #f97316; --bg: #0a0a0a; --bg-secondary: #171717; --text: #fafafa; --text-secondary: #a3a3a3; --border: #262626; --code-bg: #0d0d0d; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        nav a { color: var(--text-secondary); text-decoration: none; margin-left: 1.5rem; }
+        main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        h2 { font-size: 1.75rem; margin: 2.5rem 0 1rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: var(--code-bg); padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+        pre code { background: none; padding: 0; color: #e5e5e5; display: block; }
+        .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .error-title { color: #ef4444; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .solution-box { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .solution-title { color: #22c55e; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        ul { margin: 1rem 0; padding-left: 1.5rem; }
+        li { margin: 0.5rem 0; color: var(--text-secondary); }
+        a { color: var(--primary); }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-secondary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🐾 OpenClaw 部署教程</a>
+            <nav><a href="/">返回首页</a></nav>
+        </div>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1>GitHub 连接超时</h1>
+        <p class="subtitle">推送到 GitHub 时出现 connection timeout 错误</p>
+
+        <div class="error-box">
+            <div class="error-title">❌ 错误信息</div>
+            <pre><code>fatal: unable to access 'https://github.com/username/repo.git/': 
+Failed to connect to github.com port 443 after 21066 ms: Could not connect to server
+
+# 或
+fatal: cannot exec 'git-remote-https': No such file or directory</code></pre>
+        </div>
+
+        <h2>原因分析</h2>
+        <ul>
+            <li>🌏 国内网络无法直接访问 GitHub</li>
+            <li>🔒 代理/VPN 未正确配置</li>
+            <li>� firewall 被防火墙拦截</li>
+            <li>🌐 DNS 解析问题</li>
+        </ul>
+
+        <h2>解决方案</h2>
+
+        <h3>方案一：检查并关闭代理</h3>
+        <div class="solution-box">
+            <div class="solution-title">✅ 推荐</div>
+            <p>如果你开了代理/VPN，尝试关闭或配置正确的代理端口</p>
+        </div>
+        <pre><code># 检查 Git 代理设置
+git config --global --get http.proxy
+git config --global --get https.proxy
+
+# 清除代理设置
+git config --global --unset http.proxy
+git config --global --unset https.proxy</code></pre>
+
+        <h3>方案二：配置代理</h3>
+        <p>如果你需要代理才能访问 GitHub：</p>
+        <pre><code># 配置 HTTP 代理（假设代理端口是 7890）
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+
+# 或者使用 SOCKS5 代理
+git config --global http.proxy socks5://127.0.0.1:7890
+git config --global https.proxy socks5://127.0.0.1:7890</code></pre>
+
+        <h3>方案三：手动网页上传</h3>
+        <p>如果以上方案都无法解决：</p>
+        <ol>
+            <li>打开 GitHub 仓库页面</li>
+            <li>点击 <strong>Add file</strong> → <strong>Upload files</strong></li>
+            <li>直接拖拽文件或粘贴代码</li>
+            <li>点击 <strong>Commit changes</strong></li>
+        </ol>
+
+        <h3>方案四：使用 GitHub CLI</h3>
+        <pre><code># 安装 GitHub CLI
+# Windows: winget install GitHub.cli
+# macOS: brew install gh
+
+# 登录
+gh auth login
+
+# 推送代码
+gh repo sync</code></pre>
+
+        <h2>检测网络</h2>
+        <pre><code# 测试 GitHub 连接
+curl -I https://github.com
+
+# 测试特定端口
+telnet github.com 443</code></pre>
+
+        <h2>常见问题</h2>
+        <h3>Q: 代理设置后还是连不上？</h3>
+        <p>检查代理是否正常工作，尝试用浏览器访问 github.com</p>
+
+        <h3>Q: 错误 "Permission denied"？</h3>
+        <p>这可能是 SSH 密钥问题，尝试使用 HTTPS 方式：</p>
+        <pre><code>git remote set-url origin https://github.com/username/repo.git</code></pre>
+
+    </main>
+</body>
+</html>
